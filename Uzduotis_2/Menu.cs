@@ -227,8 +227,8 @@ namespace Uzduotis_2
         {
             try
             {
-                await FileManager.WriteToFile(fileName, data);
                 Log.Info($"Result saved to file \"{fileName}\"\n");
+                await FileManager.WriteToFile(fileName, data);
             }
             catch (Exception ex)
             {
