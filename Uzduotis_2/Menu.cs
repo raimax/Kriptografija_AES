@@ -137,6 +137,37 @@ namespace Uzduotis_2
             Console.ForegroundColor = ConsoleColor.Black;
             Console.WriteLine("Result: " + Result + "\n");
             Console.ResetColor();
+
+            string inputText = "";
+
+            while (string.IsNullOrWhiteSpace(inputText) || int.Parse(inputText) != 1 || int.Parse(inputText) != 2)
+            {
+                Console.WriteLine("Whould you like to save result to a file?\n");
+                Console.WriteLine("1: Yes");
+                Console.WriteLine("2: No");
+                inputText = Console.ReadLine();
+            }
+
+            if (inputText == "1")
+            {
+                Console.WriteLine("Enter file name: ");
+                inputText = Console.ReadLine();
+                WriteToFile(inputText, Result);
+            }
+        }
+
+        private static async void WriteToFile(string fileName, string data)
+        {
+            try
+            {
+                await FileManager.WriteToFile(fileName, data);
+                Console.BackgroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Result saved to file \"{fileName}\"\n");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 }
