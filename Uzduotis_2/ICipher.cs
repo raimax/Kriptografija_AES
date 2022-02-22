@@ -1,9 +1,11 @@
-﻿namespace Uzduotis_2
+﻿using System.Security.Cryptography;
+
+namespace Uzduotis_2
 {
     public interface ICipher
     {
         public string AlgorithmName { get; }
-        public byte[] Encode(string text, byte[] key, byte[] IV);
-        public string Decode(string text, byte[] key, byte[] IV);
+        public string Encode(string text, byte[] key, CipherMode mode);
+        public string Decode(byte[] text, byte[] key, CipherMode mode);
     }
 }
