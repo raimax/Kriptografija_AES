@@ -6,9 +6,9 @@ namespace Uzduotis_2
 {
     public static class FileManager
     {
-        public static async Task<string> ReadFile(string fileName)
+        public static async Task<string> ReadFromFile(string fileName)
         {
-            if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentNullException($"File name not provided in {nameof(ReadFile)}");
+            if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentNullException($"File name not provided in {nameof(ReadFromFile)}");
 
             if (!File.Exists(Directory.GetCurrentDirectory() + "\\" + fileName))
             {
