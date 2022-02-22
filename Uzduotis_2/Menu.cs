@@ -26,7 +26,7 @@
 
             DisplayOptions();
 
-            BeginProcess(SelectedOption);
+            BeginProcess();
         }
 
         public void DisplayOptions()
@@ -54,7 +54,7 @@
             }
         }
 
-        public void BeginProcess(Option option)
+        public void BeginProcess()
         {
             string inputText = InputText();
 
