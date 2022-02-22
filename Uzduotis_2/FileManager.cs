@@ -6,6 +6,13 @@ namespace Uzduotis_2
 {
     public static class FileManager
     {
+        /// <summary>
+        /// Nuskaito tekstą iš failo ir jį grąžina.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns>Nuskaitytą tekstą</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
         public static async Task<string> ReadFromFile(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentNullException($"File name not provided in {nameof(ReadFromFile)}");
@@ -18,6 +25,13 @@ namespace Uzduotis_2
             return await File.ReadAllTextAsync(Directory.GetCurrentDirectory() + "\\" + fileName);
         }
 
+        /// <summary>
+        /// Įrašo duomenis į failą
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static async Task WriteToFile(string fileName, string data)
         {
             if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentNullException($"File name not provided in {nameof(WriteToFile)}");
