@@ -43,18 +43,12 @@ namespace Uzduotis_2
             }
             catch (CryptographicException)
             {
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.ForegroundColor = ConsoleColor.Black;
-                Console.WriteLine("Selected mode doesn't match cipher text");
-                Console.ResetColor();
+                Log.Error("Selected mode doesn't match cipher text");
                 Start();
             }
             catch (FormatException)
             {
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.ForegroundColor = ConsoleColor.Black;
-                Console.WriteLine("Entered text is not in Base64 format");
-                Console.ResetColor();
+                Log.Error("Entered text is not in Base64 format");
                 Start();
             }
         }
@@ -81,7 +75,7 @@ namespace Uzduotis_2
                         SelectedOption = Option.Decode;
                         break;
                     default:
-                        Console.WriteLine("Option doesn't exist\n");
+                        Log.Error("Option doesn't exist\n");
                         break;
                 }
             }
@@ -211,10 +205,7 @@ namespace Uzduotis_2
         private void DisplayResult()
         {
             Console.Clear();
-            Console.BackgroundColor = ConsoleColor.White;
-            Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine("Result: " + Result + "\n");
-            Console.ResetColor();
+            Log.Info("Result: " + Result + "\n");
 
             if (SelectedOption == Option.Encode)
             {
@@ -238,11 +229,11 @@ namespace Uzduotis_2
             try
             {
                 await FileManager.WriteToFile(fileName, data);
-                Console.WriteLine($"Result saved to file \"{fileName}\"\n");
+                Log.Info($"Result saved to file \"{fileName}\"\n");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Log.Error(ex.Message);
             }
         }
 
@@ -259,7 +250,7 @@ namespace Uzduotis_2
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Error(ex.Message);
             }
 
             return "";
