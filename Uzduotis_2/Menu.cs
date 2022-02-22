@@ -1,4 +1,7 @@
-﻿namespace Uzduotis_2
+﻿using System;
+using System.Security.Cryptography;
+
+namespace Uzduotis_2
 {
     public class Menu
     {
@@ -20,9 +23,9 @@
 
         public void Start()
         {
-            System.Console.ForegroundColor = System.ConsoleColor.Green;
-            System.Console.WriteLine($"{_cipher.AlgorithmName}\n");
-            System.Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"{_cipher.AlgorithmName}\n");
+            Console.ResetColor();
 
             DisplayOptions();
 
@@ -33,11 +36,11 @@
         {
             while (SelectedOption == Option.Undefined)
             {
-                System.Console.WriteLine("Select option:\n");
-                System.Console.WriteLine("1. Encode");
-                System.Console.WriteLine("2. Decode");
+                Console.WriteLine("Select option:\n");
+                Console.WriteLine("1. Encode");
+                Console.WriteLine("2. Decode");
 
-                string inputOption = System.Console.ReadLine();
+                string inputOption = Console.ReadLine();
 
                 switch (inputOption)
                 {
@@ -48,7 +51,7 @@
                         SelectedOption = Option.Decode;
                         break;
                     default:
-                        System.Console.WriteLine("Option doesn't exist\n");
+                        Console.WriteLine("Option doesn't exist\n");
                         break;
                 }
             }
@@ -56,15 +59,17 @@
 
         public void BeginProcess()
         {
-            string inputText = InputText();
+            string inputText = InputText("Enter your text: ");
+            byte[] key = InputKey("Enter your key (16): ");
+            CipherMode mode = SelectMode();
 
             switch (SelectedOption)
             {
                 case Option.Encode:
-                    Result = _cipher.Encode(inputText);
+                    Result = _cipher.Encode(inputText, key, mode);
                     break;
                 case Option.Decode:
-                    Result = _cipher.Decode(inputText);
+                    Result = _cipher.Decode(Convert.FromBase64String(inputText), key, mode);
                     break;
                 default:
                     break;
@@ -75,26 +80,63 @@
             Start();
         }
 
-        private static string InputText()
+        private static CipherMode SelectMode()
+        {
+            string text = "";
+            int mode = 0;
+
+            while (string.IsNullOrWhiteSpace(text))
+            {
+                Console.WriteLine("Select mode:\n");
+                Console.WriteLine("1: CBC");
+                Console.WriteLine("2: ECB");
+                Console.WriteLine("3: OFB");
+                Console.WriteLine("4: CFB");
+                Console.WriteLine("5: CTS");
+                text = Console.ReadLine();
+
+                if (!int.TryParse(text, out mode) || !Enum.IsDefined(typeof(CipherMode), mode))
+                {
+                    text = "";
+                }
+            }
+
+            return (CipherMode)mode;
+        }
+
+        private static string InputText(string title)
         {
             string inputText = "";
 
             while (string.IsNullOrWhiteSpace(inputText))
             {
-                System.Console.WriteLine("Enter your text:");
-                inputText = System.Console.ReadLine();
+                Console.WriteLine(title);
+                inputText = Console.ReadLine();
             }
 
             return inputText;
         }
 
+        private static byte[] InputKey(string title)
+        {
+            string inputText = "";
+
+            while (string.IsNullOrWhiteSpace(inputText) || inputText.Length != 16)
+            {
+                Console.WriteLine(title);
+                inputText = Console.ReadLine();
+            }
+
+            return System.Text.Encoding.UTF8.GetBytes(inputText);
+        }
+
         private void DisplayResult()
         {
-            System.Console.Clear();
-            System.Console.BackgroundColor = System.ConsoleColor.White;
-            System.Console.ForegroundColor = System.ConsoleColor.Black;
-            System.Console.WriteLine("Result: " + Result + "\n");
-            System.Console.ResetColor();
+            Console.Clear();
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.WriteLine("Result: " + Result + "\n");
+            Console.ResetColor();
         }
     }
 }
