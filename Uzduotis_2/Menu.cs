@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -93,6 +94,7 @@ namespace Uzduotis_2
 
                 if (selectedOption == "y")
                 {
+                    DisplayDirectoryFiles();
                     string fileName = InputText("Enter file name: ");
                     textToProcess = ReadFromFile(fileName).Result;
 
@@ -253,6 +255,20 @@ namespace Uzduotis_2
             }
 
             return "";
+        }
+
+        /// <summary>
+        /// Parodo visus esamame aplanke esančius failus
+        /// </summary>
+        private static void DisplayDirectoryFiles()
+        {
+            DirectoryInfo dirInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
+            Console.WriteLine();
+            foreach (var file in dirInfo.GetFiles("*"))
+            {
+                Console.WriteLine(file.Name);
+            }
+            Console.WriteLine();
         }
     }
 }
