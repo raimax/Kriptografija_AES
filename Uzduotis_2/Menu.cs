@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace Uzduotis_2
 {
@@ -59,17 +60,37 @@ namespace Uzduotis_2
 
         public void BeginProcess()
         {
-            string inputText = InputText("Enter your text: ");
+            string textToDecode = "";
+            
+            if (SelectedOption == Option.Decode)
+            {
+                string selectedOption = InputText("Would you like to decode from file? y/n");
+
+                if (selectedOption == "y")
+                {
+                    string fileName = InputText("Enter file name: ");
+                    textToDecode = ReadFromFile(fileName).Result;
+                }
+                else
+                {
+                    textToDecode = InputText("Enter your text: ");
+                }
+            }
+            else
+            {
+                textToDecode = InputText("Enter your text: ");
+            }
+            
             byte[] key = InputKey("Enter your key (16): ");
             CipherMode mode = SelectMode();
 
             switch (SelectedOption)
             {
                 case Option.Encode:
-                    Result = _cipher.Encode(inputText, key, mode);
+                    Result = _cipher.Encode(textToDecode, key, mode);
                     break;
                 case Option.Decode:
-                    Result = _cipher.Decode(Convert.FromBase64String(inputText), key, mode);
+                    Result = _cipher.Decode(Convert.FromBase64String(textToDecode), key, mode);
                     break;
                 default:
                     break;
@@ -138,21 +159,15 @@ namespace Uzduotis_2
             Console.WriteLine("Result: " + Result + "\n");
             Console.ResetColor();
 
-            string inputText = "";
-
-            while (string.IsNullOrWhiteSpace(inputText) || int.Parse(inputText) != 1 || int.Parse(inputText) != 2)
+            if (SelectedOption == Option.Encode)
             {
-                Console.WriteLine("Whould you like to save result to a file?\n");
-                Console.WriteLine("1: Yes");
-                Console.WriteLine("2: No");
-                inputText = Console.ReadLine();
-            }
+                string inputText = InputText("Would you like to save result to a file? y/n");
 
-            if (inputText == "1")
-            {
-                Console.WriteLine("Enter file name: ");
-                inputText = Console.ReadLine();
-                WriteToFile(inputText, Result);
+                if (inputText == "y")
+                {
+                    inputText = InputText("Enter file name: ");
+                    WriteToFile(inputText, Result);
+                }
             }
         }
 
@@ -161,13 +176,26 @@ namespace Uzduotis_2
             try
             {
                 await FileManager.WriteToFile(fileName, data);
-                Console.BackgroundColor = ConsoleColor.Green;
                 Console.WriteLine($"Result saved to file \"{fileName}\"\n");
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
+        }
+
+        private static async Task<string> ReadFromFile(string fileName)
+        {
+            try
+            {
+                return await FileManager.ReadFromFile(fileName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return "";
         }
     }
 }
