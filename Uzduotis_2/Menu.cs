@@ -43,7 +43,7 @@ namespace Uzduotis_2
             }
             catch (CryptographicException)
             {
-                Log.Error("Selected mode doesn't match cipher text");
+                Log.Error("Wrong key or selected mode doesn't match cipher text");
                 Start();
             }
             catch (FormatException)
